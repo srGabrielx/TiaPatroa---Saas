@@ -17,8 +17,7 @@ declare module "next-auth/jwt" {
     role?: string;
   }
 }
-
-export const authOptions: NextAuthOptions = {
+const authOptions: NextAuthOptions = {
   // ATENÇÃO: NÃO inclua 'adapter' aqui quando estiver usando Credentials com .env.
   // O PrismaAdapter tenta buscar o ID do usuário no banco PostgreSQL e causa o erro 401 ao não encontrar.
   providers: [
