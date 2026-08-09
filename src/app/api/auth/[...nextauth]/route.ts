@@ -1,7 +1,5 @@
 import NextAuth, { NextAuthOptions, DefaultSession } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { PrismaAdapter } from "@auth/prisma-adapter";
-import { prisma } from "@/lib/prisma";
 
 declare module "next-auth" {
   interface User {
@@ -21,8 +19,8 @@ declare module "next-auth/jwt" {
 }
 
 export const authOptions: NextAuthOptions = {
-  // Mantemos o PrismaAdapter aqui apenas para caso você use o Google Login para clientes depois
-  adapter: PrismaAdapter(prisma) as any,
+  // ATENÇÃO: NÃO inclua 'adapter' aqui quando estiver usando Credentials com .env.
+  // O PrismaAdapter tenta buscar o ID do usuário no banco PostgreSQL e causa o erro 401 ao não encontrar.
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -31,38 +29,39 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Senha", type: "password" },
       },
       async authorize(credentials) {
-        console.log("👀 Verificando login pelo .env...");
+        // Pega as variáveis de ambiente e limpa espaços extras
+        const adminEmail = process.env.ADMIN_EMAIL?.trim().toLowerCase();
+        const adminPassword = process.env.ADMIN_PASSWORD?.trim();
 
-        const adminEmail = process.env.ADMIN_EMAIL;
-        const adminPassword = process.env.ADMIN_PASSWORD;
+        const inputEmail = credentials?.email?.trim().toLowerCase();
+        const inputPassword = credentials?.password?.trim();
 
-        // Verifica se as variáveis de ambiente existem
+        console.log("👀 Tentando login Admin via .env...");
+
         if (!adminEmail || !adminPassword) {
-          console.log("❌ ERRO: Variáveis ADMIN_EMAIL ou ADMIN_PASSWORD não configuradas.");
-          throw new Error("Erro de configuração no servidor.");
+          console.error("❌ ERRO: ADMIN_EMAIL ou ADMIN_PASSWORD não configurados no servidor.");
+          throw new Error("Erro de configuração do servidor.");
         }
 
-        // Bate o que foi digitado com o que está no .env
-        if (credentials?.email === adminEmail && credentials?.password === adminPassword) {
-          console.log("✅ TUDO CERTO! Admin validado via Variável de Ambiente.");
-
-          // Retorna um usuário "fantasma" perfeito para o NextAuth
+        if (inputEmail === adminEmail && inputPassword === adminPassword) {
+          console.log("✅ Autenticação realizada com sucesso!");
           return {
-            id: "admin-master-id",
+            id: "admin-master",
             name: "Administrador",
             email: adminEmail,
             role: "admin",
           };
         }
 
-        console.log("❌ ERRO: E-mail ou senha não batem com o .env");
-        throw new Error("Credenciais inválidas.");
+        console.log("❌ E-mail ou senha incorretos.");
+        return null;
       },
     }),
   ],
   session: {
     strategy: "jwt",
   },
+  secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
@@ -75,7 +74,7 @@ export const authOptions: NextAuthOptions = {
         session.user.role = token.role as string;
       }
       return session;
-    }
+    },
   },
 };
 
