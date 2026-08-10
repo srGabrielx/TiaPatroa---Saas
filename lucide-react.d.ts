@@ -21,6 +21,7 @@ declare module "lucide-react" {
   export const LayoutDashboard: LucideIcon;
   export const LogOut: LucideIcon;
   export const MapPin: LucideIcon;
+  export const Menu: LucideIcon; 
   export const Minus: LucideIcon;
   export const PackageCheck: LucideIcon;
   export const Phone: LucideIcon;

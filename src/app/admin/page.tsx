@@ -18,131 +18,138 @@ export default async function AdminDashboard() {
     (p) => p.status === "RECEBIDO" || p.status === "PREPARANDO" || p.status === "SAIU_PARA_ENTREGA"
   );
 
-  // Função auxiliar para definir a cor da badge de status
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'RECEBIDO': return 'bg-orange-100 text-orange-800';
-      case 'PREPARANDO': return 'bg-blue-100 text-blue-800';
-      case 'SAIU_PARA_ENTREGA': return 'bg-yellow-100 text-yellow-800';
-      case 'FINALIZADO': return 'bg-green-100 text-green-800';
-      case 'CANCELADO': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'RECEBIDO': return 'bg-orange-500/10 text-orange-600 border border-orange-200';
+      case 'PREPARANDO': return 'bg-blue-500/10 text-blue-600 border border-blue-200';
+      case 'SAIU_PARA_ENTREGA': return 'bg-yellow-500/10 text-yellow-600 border border-yellow-200';
+      case 'FINALIZADO': return 'bg-emerald-500/10 text-emerald-600 border border-emerald-200';
+      case 'CANCELADO': return 'bg-red-500/10 text-red-600 border border-red-200';
+      default: return 'bg-gray-100 text-gray-600 border border-gray-200';
     }
   };
 
   return (
-    <div className="p-8 max-w-7xl mx-auto space-y-8">
+    <div className="max-w-7xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      
       {/* Cabeçalho */}
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Visão Geral</h1>
-          <p className="text-gray-500 mt-1">Acompanhe os resultados da Cantina Tia Patroa.</p>
+          <h1 className="text-3xl font-extrabold tracking-tight text-slate-900">Dashboard</h1>
+          <p className="text-slate-500 mt-1">Visão geral do seu negócio hoje.</p>
         </div>
-        <a
-          href="/api/pedidos/exportar"
-          className="flex items-center gap-2 bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors shadow-sm"
-        >
-          <span>⬇️</span> Exportar Planilha (CSV)
-        </a>
       </div>
 
-      {/* Cards de Resumo */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm flex items-center gap-4">
-          <div className="p-4 bg-green-100 text-green-600 rounded-full text-2xl">💰</div>
-          <div>
-            <p className="text-sm text-gray-500 font-medium">Faturamento Hoje</p>
-            <p className="text-2xl font-bold text-gray-900">R$ {faturamentoHoje.toFixed(2)}</p>
-          </div>
+      {/* Cards de Resumo - HUD Style Light */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        
+        {/* Card 1 */}
+        <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-xl shadow-slate-200/40 relative overflow-hidden group">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-50 rounded-bl-full -mr-16 -mt-16 transition-transform group-hover:scale-110" />
+          <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider">Pedidos Hoje</h3>
+          <p className="text-4xl font-black text-slate-800 mt-3 relative z-10">{pedidosHoje.length}</p>
         </div>
-        <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm flex items-center gap-4">
-          <div className="p-4 bg-blue-100 text-blue-600 rounded-full text-2xl">🛒</div>
-          <div>
-            <p className="text-sm text-gray-500 font-medium">Pedidos Hoje</p>
-            <p className="text-2xl font-bold text-gray-900">{pedidosHoje.length}</p>
-          </div>
+
+        {/* Card 2 */}
+        <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-xl shadow-slate-200/40 relative overflow-hidden group">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-50 rounded-bl-full -mr-16 -mt-16 transition-transform group-hover:scale-110" />
+          <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider">Faturamento Hoje</h3>
+          <p className="text-4xl font-black text-emerald-600 mt-3 relative z-10">
+            {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(faturamentoHoje)}
+          </p>
         </div>
-        <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm flex items-center gap-4">
-          <div className="p-4 bg-orange-100 text-orange-600 rounded-full text-2xl">⏳</div>
-          <div>
-            <p className="text-sm text-gray-500 font-medium">Pedidos Pendentes</p>
-            <p className="text-2xl font-bold text-gray-900">{pedidosPendentes.length}</p>
-          </div>
+
+        {/* Card 3 */}
+        <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-xl shadow-slate-200/40 relative overflow-hidden group sm:col-span-2 lg:col-span-1">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-orange-50 rounded-bl-full -mr-16 -mt-16 transition-transform group-hover:scale-110" />
+          <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider">Pedidos Pendentes</h3>
+          <p className="text-4xl font-black text-orange-500 mt-3 relative z-10">{pedidosPendentes.length}</p>
         </div>
       </div>
 
       {/* Tabela de Pedidos Ativos */}
-      <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
-        <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
-          <h2 className="text-lg font-semibold text-gray-900">Gestão de Pedidos (Tempo Real)</h2>
+      <div className="bg-white rounded-2xl border border-slate-100 shadow-xl shadow-slate-200/40 overflow-hidden">
+        
+        {/* Cabeçalho da Tabela Responsivo */}
+        <div className="p-6 border-b border-slate-100 bg-slate-50/50">
+          <h2 className="text-lg font-bold text-slate-800">Pedidos Recentes</h2>
         </div>
 
-        {pedidos.length === 0 ? (
-          <div className="p-6 text-gray-500 text-center">Nenhum pedido registrado ainda.</div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
+        {/* CONTAINER COM SCROLL HORIZONTAL (Blinda contra a tela preta no celular) */}
+        <div className="overflow-x-auto w-full custom-scrollbar">
+          {pedidos.length === 0 ? (
+            <div className="p-12 text-center text-slate-400 font-medium">
+              Nenhum pedido recebido ainda hoje.
+            </div>
+          ) : (
+            <table className="w-full text-left border-collapse whitespace-nowrap">
               <thead>
-                <tr className="bg-gray-50 border-b border-gray-100 text-gray-600 text-sm">
-                  <th className="p-4 font-medium">ID / Data</th>
-                  <th className="p-4 font-medium">Itens</th>
-                  <th className="p-4 font-medium">Total</th>
-                  <th className="p-4 font-medium">Status Atual</th>
-                  <th className="p-4 font-medium text-right">Ação Rápida (Aprovar)</th>
+                <tr className="bg-slate-50/80 border-b border-slate-100">
+                  <th className="p-4 text-xs font-semibold text-slate-500 uppercase tracking-wider w-1/4">Cliente</th>
+                  <th className="p-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Itens</th>
+                  <th className="p-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Total</th>
+                  <th className="p-4 text-xs font-semibold text-slate-500 uppercase tracking-wider text-center">Status</th>
+                  <th className="p-4 text-xs font-semibold text-slate-500 uppercase tracking-wider text-right">Ação</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100 text-sm">
+              <tbody className="divide-y divide-slate-50">
                 {pedidos.map((pedido) => (
-                  <tr key={pedido.id} className="hover:bg-gray-50/50 transition-colors">
+                  <tr key={pedido.id} className="hover:bg-slate-50/50 transition-colors">
+                    
                     <td className="p-4">
-                      <span className="font-semibold text-gray-900 block">#{pedido.id.slice(-4).toUpperCase()}</span>
-                      <span className="text-gray-500 text-xs">
-                        {new Date(pedido.createdAt).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
+                      <p className="font-bold text-slate-800">{pedido.clienteNome}</p>
+                      <p className="text-xs text-slate-500 mt-0.5 font-medium">{pedido.clienteTelefone}</p>
+                    </td>
+                    
+                    <td className="p-4 max-w-[200px] truncate text-sm text-slate-600">
+                      {pedido.itens.map(i => `${i.quantidade}x ${i.produtoNome}`).join(", ")}
+                    </td>
+                    
+                    <td className="p-4 font-bold text-slate-700">
+                      R$ {pedido.total.toFixed(2)}
+                    </td>
+                    
+                    <td className="p-4 text-center">
+                      <span className={`px-3 py-1 text-xs font-bold rounded-full shadow-sm ${getStatusBadge(pedido.status)}`}>
+                        {pedido.status.replace(/_/g, " ")}
                       </span>
                     </td>
-                    <td className="p-4 text-gray-600">{pedido.itens.length} item(ns)</td>
-                    <td className="p-4 font-semibold text-gray-900">R$ {pedido.total.toFixed(2)}</td>
-                    <td className="p-4">
-                      <span className={`px-3 py-1 rounded-full text-xs font-bold tracking-wide ${getStatusBadge(pedido.status)}`}>
-                        {pedido.status.replace(/_/g, ' ')}
-                      </span>
-                    </td>
+                    
                     <td className="p-4 text-right">
-                      {/* Lógica de Botões baseada no Status do Pedido usando Server Actions */}
                       {pedido.status === "RECEBIDO" && (
                         <form action={atualizarStatusPedido.bind(null, pedido.id, "PREPARANDO")}>
-                          <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-lg text-xs font-semibold hover:bg-blue-700 transition shadow-sm">
-                            Aprovar & Preparar
+                          <button type="submit" className="px-4 py-2 bg-indigo-600 text-white rounded-lg text-xs font-bold hover:bg-indigo-700 transition shadow-md shadow-indigo-200">
+                            Aceitar & Preparar
                           </button>
                         </form>
                       )}
                       {pedido.status === "PREPARANDO" && (
                         <form action={atualizarStatusPedido.bind(null, pedido.id, "SAIU_PARA_ENTREGA")}>
-                          <button type="submit" className="px-4 py-2 bg-yellow-500 text-white rounded-lg text-xs font-semibold hover:bg-yellow-600 transition shadow-sm">
-                            Despachar Entrega
+                          <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded-lg text-xs font-bold hover:bg-blue-600 transition shadow-md shadow-blue-200">
+                            Despachar
                           </button>
                         </form>
                       )}
                       {pedido.status === "SAIU_PARA_ENTREGA" && (
                         <form action={atualizarStatusPedido.bind(null, pedido.id, "FINALIZADO")}>
-                          <button type="submit" className="px-4 py-2 bg-green-600 text-white rounded-lg text-xs font-semibold hover:bg-green-700 transition shadow-sm">
-                            Marcar como Entregue
+                          <button type="submit" className="px-4 py-2 bg-emerald-500 text-white rounded-lg text-xs font-bold hover:bg-emerald-600 transition shadow-md shadow-emerald-200">
+                            Concluir Entrega
                           </button>
                         </form>
                       )}
-                      {pedido.status === "FINALIZADO" && (
-                        <span className="text-gray-400 text-xs font-medium">Concluído ✅</span>
-                      )}
-                      {pedido.status === "CANCELADO" && (
-                        <span className="text-red-400 text-xs font-medium">Cancelado ❌</span>
+                      {(pedido.status === "FINALIZADO" || pedido.status === "CANCELADO") && (
+                        <span className="text-slate-400 text-xs font-bold uppercase tracking-wider flex items-center justify-end gap-1">
+                          {pedido.status === "FINALIZADO" ? "✅ Concluído" : "❌ Cancelado"}
+                        </span>
                       )}
                     </td>
+
                   </tr>
                 ))}
               </tbody>
             </table>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );
