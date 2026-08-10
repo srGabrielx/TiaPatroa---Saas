@@ -48,7 +48,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 <div className="h-20 flex items-center justify-between px-6 border-b border-slate-800/50 bg-slate-950">
                     {!isDesktopCollapsed && (
                         <span className="text-xl font-bold bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent truncate">
-                            Tia Patroa Admin
+                            Tia Patroa ! 
                         </span>
                     )}
                     {isDesktopCollapsed && (
