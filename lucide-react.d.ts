@@ -1,8 +1,20 @@
 declare module "lucide-react" {
   import type { ComponentType, SVGProps } from "react";
 
-  export type LucideIcon = ComponentType<SVGProps<SVGSVGElement>>;
+  // 🚀 ADICIONAMOS ESTA INTERFACE PARA O TS RECONHECER O 'size'
+  export interface LucideProps extends SVGProps<SVGSVGElement> {
+    size?: number | string;
+    color?: string;
+    strokeWidth?: number | string;
+  }
 
+  // Mudamos aqui para usar a nossa nova interface LucideProps
+  export type LucideIcon = ComponentType<LucideProps>;
+
+  export const Activity: LucideIcon;
+  export const AlertCircle: LucideIcon;
+  export const ArrowRight: LucideIcon;
+// ... continue com o resto da sua lista exata de ícones aqui embaixo
   export const Activity: LucideIcon;
   export const AlertCircle: LucideIcon;
   export const ArrowRight: LucideIcon;
