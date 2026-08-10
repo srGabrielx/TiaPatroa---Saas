@@ -119,7 +119,8 @@ export default async function ProdutosAdminPage() {
               Nenhum produto cadastrado no cardápio.
             </div>
           ) : (
-            <table className="w-full text-left border-collapse">
+            <div className="overflow-x-auto w-full">
+              <table className="w-full text-left border-collapse whitespace-nowrap">
 
               <thead className="hidden lg:table-header-group">
                 <tr className="bg-slate-50/80 border-b border-slate-100">
@@ -214,14 +215,13 @@ export default async function ProdutosAdminPage() {
                         </form>
                       </div>
                     </td>
-
                   </tr>
                 ))}
               </tbody>
             </table>
+          </div>
           )}
         </div>
-
       </div>
     </div>
   );
