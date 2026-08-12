@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ChevronRight, ShoppingBag, Clock, CircleCheck, Truck, PackageCheck, User } from "lucide-react";
+import { ChevronRight, ShoppingBag, Clock, CircleCheck, PackageCheck, User } from "lucide-react";
 
 export default function MeusPedidosPage() {
     const [pedidos, setPedidos] = useState<any[]>([]);
