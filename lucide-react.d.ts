@@ -14,7 +14,6 @@ declare module "lucide-react" {
   export const Activity: LucideIcon;
   export const AlertCircle: LucideIcon;
   export const ArrowRight: LucideIcon;
-// ... continue com o resto da sua lista exata de ícones aqui embaixo
   export const Activity: LucideIcon;
   export const AlertCircle: LucideIcon;
   export const ArrowRight: LucideIcon;
@@ -43,11 +42,12 @@ declare module "lucide-react" {
   export const ShoppingBag: LucideIcon;
   export const ShoppingCart: LucideIcon;
   export const Trash2: LucideIcon;
-  export const Truck: LucideIcon;
+  export const Bike: LucideIcon;
   export const User: LucideIcon;
   export const UtensilsCrossed: LucideIcon;
   export const X: LucideIcon;
   export const XCircle: LucideIcon;
+  export const MessageSquareText: LucideIcon;
 
   export default {} as Record<string, LucideIcon>;
 }

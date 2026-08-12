@@ -5,7 +5,7 @@ import Link from "next/link";
 import {
     Clock,
     CircleCheck,
-    Truck,
+    Bike,
     PackageCheck,
     ChevronLeft,
     MapPin,
@@ -41,7 +41,7 @@ interface Pedido {
 const STEPS = [
     { status: "RECEBIDO", label: "Pedido Recebido", icon: Clock, desc: "Aguardando confirmação da cozinha" },
     { status: "PREPARANDO", label: "Em Preparo", icon: PackageCheck, desc: "Seu lanche está no capricho" },
-    { status: "SAIU_PARA_ENTREGA", label: "Saiu para Entrega", icon: Truck, desc: "O entregador já está a caminho" },
+    { status: "SAIU_PARA_ENTREGA", label: "Saiu para Entrega", icon: Bike, desc: "O entregador já está a caminho" },
     { status: "ENTREGUE", label: "Entregue", icon: CircleCheck, desc: "Seu pedido foi entregue. Bom apetite!" }
 ];
 
@@ -109,12 +109,12 @@ export default function AcompanharPedidoPage({ params }: { params: { id: string 
         return st === "CANCELADO" || st === "RECUSADO";
     };
 
-    const copiarChavePix = () => {
-        navigator.clipboard.writeText("cantinatiapatroa@pix.com.br");
-        setCopiado(true);
-        setTimeout(() => setCopiado(false), 3000);
+    const copiarPix = () => {
+        // Tenta copiar o Pix real, se não tiver, copia o de teste
+        const chave = pedido?.codigoPix || "00020126580014br.gov.bcb.pix0136...";
+        navigator.clipboard.writeText(chave);
+        alert("Código Pix copiado!"); // Aqui você pode usar o toast se preferir
     };
-
     if (loading) {
         return (
             <div className="min-h-[70vh] flex flex-col items-center justify-center space-y-4">
@@ -186,8 +186,8 @@ export default function AcompanharPedidoPage({ params }: { params: { id: string 
                                     return (
                                         <div key={step.status} className="flex flex-col items-center text-center space-y-2">
                                             <div className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all ${isDone
-                                                    ? "bg-red-600 text-white shadow-md shadow-red-200"
-                                                    : "bg-gray-100 text-gray-400"
+                                                ? "bg-red-600 text-white shadow-md shadow-red-200"
+                                                : "bg-gray-100 text-gray-400"
                                                 } ${isCurrent ? "ring-4 ring-red-100 scale-110" : ""}`}>
                                                 <Icon className="w-6 h-6" />
                                             </div>
@@ -218,18 +218,17 @@ export default function AcompanharPedidoPage({ params }: { params: { id: string 
                     </div>
                     <p className="text-xs text-gray-500">Copie a chave abaixo para realizar o pagamento no aplicativo do seu banco:</p>
 
-                    <div className="flex items-center gap-2 bg-gray-50 p-3 rounded-xl border border-gray-200">
-                        <input
-                            readOnly
-                            value="cantinatiapatroa@pix.com.br"
-                            className="bg-transparent text-sm font-mono text-gray-800 flex-1 outline-none"
-                        />
+                    <div className="flex flex-col sm:flex-row items-center gap-3 p-4 bg-gray-100 rounded-xl w-full border border-gray-200">
+                        <p className="text-xs sm:text-sm font-mono text-gray-600 break-all text-center sm:text-left w-full sm:flex-1">
+                            {/* Adicionei o ? logo depois de pedido para ele não quebrar se estiver vazio */}
+                            {pedido?.codigoPix || "00020126580014br.gov.bcb.pix0136..."}
+                        </p>
+
                         <button
-                            onClick={copiarChavePix}
-                            className="bg-red-600 text-white px-4 py-2 rounded-lg font-bold text-xs hover:bg-red-700 transition flex items-center gap-1.5 shrink-0"
+                            onClick={copiarPix}
+                            className="w-full sm:w-auto flex-shrink-0 px-6 py-3 sm:py-2 bg-red-600 text-white font-bold rounded-lg hover:bg-red-700 transition-colors shadow-sm"
                         >
-                            {copiado ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-                            {copiado ? "Copiado!" : "Copiar Chave"}
+                            Copiar Pix
                         </button>
                     </div>
                 </div>
