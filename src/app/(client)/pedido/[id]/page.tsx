@@ -111,7 +111,7 @@ export default function AcompanharPedidoPage({ params }: { params: { id: string 
 
     const copiarPix = () => {
         // Tenta copiar o Pix real, se não tiver, copia o de teste
-        const chave = pedido?.codigoPix || "00020126580014br.gov.bcb.pix0136...";
+        const chave = (pedido as any)?.codigoPix || "00020126580014br.gov.bcb.pix0136...";
         navigator.clipboard.writeText(chave);
         alert("Código Pix copiado!"); // Aqui você pode usar o toast se preferir
     };
@@ -220,8 +220,9 @@ export default function AcompanharPedidoPage({ params }: { params: { id: string 
 
                     <div className="flex flex-col sm:flex-row items-center gap-3 p-4 bg-gray-100 rounded-xl w-full border border-gray-200">
                         <p className="text-xs sm:text-sm font-mono text-gray-600 break-all text-center sm:text-left w-full sm:flex-1">
+                         
                             {/* Adicionei o ? logo depois de pedido para ele não quebrar se estiver vazio */}
-                            {pedido?.codigoPix || "00020126580014br.gov.bcb.pix0136..."}
+                            {(pedido as any)?.codigoPix || "00020126580014br.gov.bcb.pix0136..."}
                         </p>
 
                         <button
