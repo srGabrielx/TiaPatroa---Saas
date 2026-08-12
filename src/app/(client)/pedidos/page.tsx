@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ChevronRight, ShoppingBag, Clock, CircleCheck, PackageCheck, User } from "lucide-react";
+import { ChevronRight, ShoppingBag, Clock, CircleCheck, PackageCheck, Bike, User } from "lucide-react";
 
 export default function MeusPedidosPage() {
     const [pedidos, setPedidos] = useState<any[]>([]);
@@ -57,7 +57,7 @@ export default function MeusPedidosPage() {
             case "EM_PREPARO":
                 return <span className="bg-blue-50 text-blue-700 font-bold text-xs px-3 py-1 rounded-full border border-blue-200 flex items-center gap-1"><PackageCheck className="w-3.5 h-3.5" /> Preparando</span>;
             case "SAIU_PARA_ENTREGA":
-                return <span className="bg-purple-50 text-purple-700 font-bold text-xs px-3 py-1 rounded-full border border-purple-200 flex items-center gap-1"><Truck className="w-3.5 h-3.5" /> Saiu p/ Entrega</span>;
+                return <span className="bg-purple-50 text-purple-700 font-bold text-xs px-3 py-1 rounded-full border border-purple-200 flex items-center gap-1"><Bike className="w-3.5 h-3.5" /> Saiu p/ Entrega</span>;
             case "ENTREGUE":
             case "CONCLUIDO":
             case "FINALIZADO":
