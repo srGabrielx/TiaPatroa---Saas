@@ -26,9 +26,9 @@ export default function ClientLayout({ children }: { children: ReactNode }) {
 
                         {/* Logo */}
                         <Link href="/" className="flex items-center gap-3">
-                            <div className="relative w-10 h-10 flex items-center justify-center shrink-0">
+                            <div className="relative h-12 w-12 sm:h-14 sm:w-14 flex items-center justify-center shrink-0">
                                 <Image
-                                    src="/logo.png"
+                                    src="/icons/logo-transparent.png"
                                     alt="Logo Cantina Tia Patroa"
                                     fill
                                     className="object-contain"

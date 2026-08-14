@@ -10,7 +10,7 @@ export default function Footer() {
                 {/* Coluna 1: Sobre / Marca */}
                 <div className="space-y-4">
                     <Link href="/" className="flex w-fit items-center gap-2 rounded-lg transition hover:opacity-85" aria-label="Ir para a página inicial da Cantina Tia Patroa">
-                        <Image src="/logo.png" alt="Logo Cantina Tia Patroa" width={40} height={40} className="rounded-xl object-contain" />
+                        <Image src="/icons/logo-transparent.png" alt="Logo Cantina Tia Patroa" width={64} height={64} className="object-contain" />
                         <span className="font-bold text-xl text-white tracking-tight">
                             Cantina <span className="text-red-500">Tia Patroa</span>
                         </span>
