@@ -1,9 +1,11 @@
 import { prisma } from "@/lib/prisma";
 import { criarProduto, alterarDisponibilidade, excluirProduto } from "@/app/actions/produtos";
+import { requireAdmin } from "@/lib/require-admin";
 
 export const dynamic = 'force-dynamic';
 
 export default async function ProdutosAdminPage() {
+  await requireAdmin();
   const produtos = await prisma.produto.findMany({
     orderBy: { createdAt: 'desc' }
   });

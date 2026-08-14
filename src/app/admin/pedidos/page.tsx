@@ -1,9 +1,11 @@
 import { prisma } from "@/lib/prisma";
 import { atualizarStatusPedido } from "@/app/actions/pedidos";
+import { requireAdmin } from "@/lib/require-admin";
 
 export const dynamic = 'force-dynamic';
 
 export default async function AdminPedidosPage() {
+    await requireAdmin();
     const pedidos = await prisma.pedido.findMany({
         include: { itens: true },
         orderBy: { createdAt: "desc" },

@@ -5,6 +5,7 @@ import Link from "next/link";
 import Providers from "@/components/Providers";
 import Footer from "@/components/Footer";
 import WelcomeDrawer from "@/components/WelcomeDrawer";
+import InstallAppPrompt from "@/components/InstallAppPrompt";
 import Image from "next/image";
 
 // Importando o ícone ShoppingCart atualizado
@@ -17,6 +18,7 @@ export default function ClientLayout({ children }: { children: ReactNode }) {
 
                 {/* 👇 O WelcomeDrawer fica aqui, fora do header, solto no layout global */}
                 <WelcomeDrawer />
+                <InstallAppPrompt />
 
                 {/* Cabeçalho Premium Responsivo */}
                 <header className="sticky top-0 z-50 bg-white border-b border-gray-100 shadow-sm">

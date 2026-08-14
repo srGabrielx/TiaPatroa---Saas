@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { MapPin, Phone, Clock, Heart } from "lucide-react";
 
 export default function Footer() {
@@ -8,14 +9,12 @@ export default function Footer() {
 
                 {/* Coluna 1: Sobre / Marca */}
                 <div className="space-y-4">
-                    <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 bg-red-600 rounded-xl flex items-center justify-center font-black text-white text-lg">
-                            C
-                        </div>
+                    <Link href="/" className="flex w-fit items-center gap-2 rounded-lg transition hover:opacity-85" aria-label="Ir para a página inicial da Cantina Tia Patroa">
+                        <Image src="/logo.png" alt="Logo Cantina Tia Patroa" width={40} height={40} className="rounded-xl object-contain" />
                         <span className="font-bold text-xl text-white tracking-tight">
                             Cantina <span className="text-red-500">Tia Patroa</span>
                         </span>
-                    </div>
+                    </Link>
                     <p className="text-xs text-gray-400 leading-relaxed">
                         O verdadeiro sabor caseiro! Lanches, salgados e refeições preparadas com ingredientes selecionados e muito carinho.
                     </p>

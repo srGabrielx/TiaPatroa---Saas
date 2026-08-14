@@ -1,6 +1,7 @@
 import { getToken } from "next-auth/jwt";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { isAdminRole } from "@/lib/roles";
 
 export async function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname;
@@ -13,7 +14,7 @@ export async function middleware(req: NextRequest) {
       secureCookie: process.env.NODE_ENV === "production"
     });
 
-    const isAdmin = token?.role === "admin" || token?.role === "ADMIN";
+    const isAdmin = isAdminRole(token?.role);
 
     // Regra da Tela de Login
     if (path === "/admin/login") {
@@ -25,7 +26,6 @@ export async function middleware(req: NextRequest) {
 
     // Bloqueio de Acesso Ilegal
     if (!token || !isAdmin) {
-      console.warn(`⚠️ [SECURITY] Tentativa de bypass rejeitada na rota: ${path}`);
       return NextResponse.redirect(new URL("/admin/login", req.url));
     }
   }

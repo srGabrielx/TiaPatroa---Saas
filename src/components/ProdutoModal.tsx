@@ -80,12 +80,12 @@ export default function ProdutoModal({ produto, isOpen, onClose }: ProdutoModalP
                     <X className="w-5 h-5" />
                 </button>
 
-                {/* Seção da Imagem - Altura ajustada no mobile para não esmagar o resto (h-48) */}
-                <div className="relative w-full md:w-1/2 h-48 md:h-auto bg-gray-100 shrink-0">
+                {/* Imagem inteira, sem recorte, em qualquer tamanho de tela */}
+                <div className="relative w-full md:w-1/2 h-[40dvh] md:h-auto md:min-h-[32rem] bg-gray-100 shrink-0">
                     <img
                         src={imagemExibicao}
                         alt={produto.nome}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-contain"
                     />
                     {/* Botão Fechar (Mobile) */}
                     <button

@@ -1,9 +1,16 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { requireAdmin } from "@/lib/require-admin";
 
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
+    try {
+      await requireAdmin();
+    } catch {
+      return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
+    }
+
     const pedidos = await prisma.pedido.findMany({
         include: { itens: true },
         orderBy: { createdAt: "desc" },

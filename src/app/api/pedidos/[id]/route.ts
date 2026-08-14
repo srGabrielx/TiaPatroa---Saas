@@ -12,7 +12,9 @@ export async function GET(request: Request, { params }: { params: { id: string }
       return NextResponse.json({ error: "Pedido não encontrado" }, { status: 404 });
     }
 
-    return NextResponse.json(pedido);
+    return NextResponse.json(pedido, {
+      headers: { "Cache-Control": "no-store, max-age=0" },
+    });
   } catch (error) {
     console.error("Erro ao buscar pedido:", error);
     return NextResponse.json({ error: "Erro interno no servidor" }, { status: 500 });
