@@ -15,6 +15,13 @@ export const metadata: Metadata = {
   title: "Cantina Tia Patroa",
   description: "A melhor comida da região, entregue quentinha na tua casa!",
   manifest: "/manifest.json", // O ficheiro que criámos na pasta public
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icon.png", type: "image/png", sizes: "512x512" },
+    ],
+    apple: [{ url: "/apple-icon.png", type: "image/png", sizes: "180x180" }],
+  },
   appleWebApp: {
     capable: true,
     title: "Tia Patroa",
