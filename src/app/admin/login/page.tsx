@@ -6,7 +6,8 @@ import { useRouter } from "next/navigation";
 
 export default function AdminLoginPage() {
     const router = useRouter();
-    const [email, setEmail] = useState("admin@tiapatroa.com");
+    // 🚨 CORREÇÃO: E-mail não está mais exposto para qualquer visitante
+    const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
@@ -53,6 +54,7 @@ export default function AdminLoginPage() {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             required
+                            placeholder="Seu e-mail de administrador"
                             className="w-full border p-3 rounded-lg outline-none focus:border-red-600 transition-colors bg-white text-gray-900"
                         />
                     </div>

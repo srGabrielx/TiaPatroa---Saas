@@ -1,5 +1,6 @@
 import NextAuth, { NextAuthOptions, DefaultSession } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { timingSafeEqual } from "crypto";
 
 declare module "next-auth" {
   interface User {
@@ -17,9 +18,15 @@ declare module "next-auth/jwt" {
     role?: string;
   }
 }
+
+const secureCompare = (a: string, b: string) => {
+  const bufA = Buffer.from(a);
+  const bufB = Buffer.from(b);
+  if (bufA.length !== bufB.length) return false;
+  return timingSafeEqual(bufA, bufB);
+};
+
 const authOptions: NextAuthOptions = {
-  // ATENÇÃO: NÃO inclua 'adapter' aqui quando estiver usando Credentials com .env.
-  // O PrismaAdapter tenta buscar o ID do usuário no banco PostgreSQL e causa o erro 401 ao não encontrar.
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -28,50 +35,51 @@ const authOptions: NextAuthOptions = {
         password: { label: "Senha", type: "password" },
       },
       async authorize(credentials) {
-        // Pega as variáveis de ambiente e limpa espaços extras
-        const adminEmail = process.env.ADMIN_EMAIL?.trim().toLowerCase();
-        const adminPassword = process.env.ADMIN_PASSWORD?.trim();
+        try {
+          const adminEmail = process.env.ADMIN_EMAIL?.trim().toLowerCase();
+          const adminPassword = process.env.ADMIN_PASSWORD?.trim();
 
-        const inputEmail = credentials?.email?.trim().toLowerCase();
-        const inputPassword = credentials?.password?.trim();
+          const inputEmail = credentials?.email?.trim().toLowerCase() || "";
+          const inputPassword = credentials?.password?.trim() || "";
 
-        console.log("👀 Tentando login Admin via .env...");
+          if (!adminEmail || !adminPassword || !inputEmail || !inputPassword) {
+            return null;
+          }
 
-        if (!adminEmail || !adminPassword) {
-          console.error("❌ ERRO: ADMIN_EMAIL ou ADMIN_PASSWORD não configurados no servidor.");
-          throw new Error("Erro de configuração do servidor.");
+          const isEmailValid = secureCompare(inputEmail, adminEmail);
+          const isPasswordValid = secureCompare(inputPassword, adminPassword);
+
+          if (isEmailValid && isPasswordValid) {
+            return {
+              id: "admin-master",
+              name: "Administrador",
+              email: adminEmail,
+              role: "admin",
+            };
+          }
+
+          return null;
+        } catch (error) {
+          console.error("❌ [AUTH] Erro interno", error);
+          return null;
         }
-
-        if (inputEmail === adminEmail && inputPassword === adminPassword) {
-          console.log("✅ Autenticação realizada com sucesso!");
-          return {
-            id: "admin-master",
-            name: "Administrador",
-            email: adminEmail,
-            role: "admin",
-          };
-        }
-
-        console.log("❌ E-mail ou senha incorretos.");
-        return null;
       },
     }),
   ],
   session: {
     strategy: "jwt",
+    maxAge: 4 * 60 * 60, // 4 horas
   },
   secret: process.env.NEXTAUTH_SECRET,
+  // A linha abaixo já implementa os padrões de segurança do OWASP sem quebrar o framework
+  useSecureCookies: process.env.NODE_ENV === "production",
   callbacks: {
     async jwt({ token, user }) {
-      if (user) {
-        token.role = user.role;
-      }
+      if (user) token.role = user.role;
       return token;
     },
     async session({ session, token }) {
-      if (session.user) {
-        session.user.role = token.role as string;
-      }
+      if (session.user) session.user.role = token.role as string;
       return session;
     },
   },

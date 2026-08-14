@@ -5,6 +5,7 @@ import Link from "next/link";
 import Providers from "@/components/Providers";
 import Footer from "@/components/Footer";
 import WelcomeDrawer from "@/components/WelcomeDrawer";
+import Image from "next/image";
 
 // Importando o ícone ShoppingCart atualizado
 import { ShoppingBag } from "lucide-react";
@@ -23,8 +24,14 @@ export default function ClientLayout({ children }: { children: ReactNode }) {
 
                         {/* Logo */}
                         <Link href="/" className="flex items-center gap-3">
-                            <div className="w-9 h-9 bg-red-600 text-white rounded-xl flex items-center justify-center font-black text-xl shadow-md">
-                                T
+                            <div className="relative w-10 h-10 flex items-center justify-center shrink-0">
+                                <Image
+                                    src="/logo.png"
+                                    alt="Logo Cantina Tia Patroa"
+                                    fill
+                                    className="object-contain"
+                                    priority // Diz ao navegador para baixar essa imagem imediatamente (Melhora o LCP)
+                                />
                             </div>
                             <span className="font-bold text-gray-900 text-lg hidden sm:block tracking-tight">
                                 Cantina Tia Patroa
