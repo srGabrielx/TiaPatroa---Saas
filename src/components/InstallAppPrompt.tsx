@@ -14,6 +14,7 @@ export default function InstallAppPrompt() {
   const [isVisible, setIsVisible] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [isIos, setIsIos] = useState(false);
+  const [hasWelcomeClosed, setHasWelcomeClosed] = useState(false);
 
   useEffect(() => {
     const isStandalone = window.matchMedia("(display-mode: standalone)").matches ||
@@ -29,24 +30,31 @@ export default function InstallAppPrompt() {
       setIsVisible(false);
       sessionStorage.setItem(DISMISS_KEY, "true");
     };
-
-    const showAfterWelcome = () => window.setTimeout(() => setIsVisible(true), 350);
+    const markWelcomeClosed = () => setHasWelcomeClosed(true);
 
     setIsIos(/iPad|iPhone|iPod/.test(window.navigator.userAgent));
     window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
     window.addEventListener("appinstalled", handleAppInstalled);
-    window.addEventListener("welcomeDrawerClosed", showAfterWelcome);
+    window.addEventListener("welcomeDrawerClosed", markWelcomeClosed);
 
     if (sessionStorage.getItem("welcomeDrawerClosed")) {
-      showAfterWelcome();
+      markWelcomeClosed();
     }
 
     return () => {
       window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
       window.removeEventListener("appinstalled", handleAppInstalled);
-      window.removeEventListener("welcomeDrawerClosed", showAfterWelcome);
+      window.removeEventListener("welcomeDrawerClosed", markWelcomeClosed);
     };
   }, []);
+
+  useEffect(() => {
+    if (!hasWelcomeClosed || sessionStorage.getItem(DISMISS_KEY)) return;
+    if (!deferredPrompt && !isIos) return;
+
+    const timer = window.setTimeout(() => setIsVisible(true), 350);
+    return () => window.clearTimeout(timer);
+  }, [deferredPrompt, hasWelcomeClosed, isIos]);
 
   const closePrompt = () => {
     setIsVisible(false);
@@ -90,11 +98,7 @@ export default function InstallAppPrompt() {
           <p className="mt-5 rounded-xl bg-gray-50 p-3 text-xs leading-relaxed text-gray-600">
             No Safari, toque em <strong>Compartilhar</strong> e selecione <strong>Adicionar à Tela de Início</strong>.
           </p>
-        ) : (
-          <p className="mt-5 rounded-xl bg-gray-50 p-3 text-xs leading-relaxed text-gray-600">
-            Para instalar, abra o menu do navegador e escolha <strong>Instalar app</strong> ou <strong>Adicionar à tela inicial</strong>.
-          </p>
-        )}
+        ) : null}
 
         <button onClick={closePrompt} className="mt-3 w-full py-2 text-sm font-semibold text-gray-500 transition hover:text-gray-700">
           Agora não
