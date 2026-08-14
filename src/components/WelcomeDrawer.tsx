@@ -20,8 +20,16 @@ export default function WelcomeDrawer() {
         sessionStorage.setItem("hasSeenWelcome", "true");
       }, 500);
       return () => clearTimeout(timer);
+    } else {
+      sessionStorage.setItem("welcomeDrawerClosed", "true");
     }
   }, []);
+
+  const closeDrawer = () => {
+    setIsOpen(false);
+    sessionStorage.setItem("welcomeDrawerClosed", "true");
+    window.dispatchEvent(new Event("welcomeDrawerClosed"));
+  };
 
   if (!isMounted) return null;
 
@@ -32,7 +40,7 @@ export default function WelcomeDrawer() {
         className={`fixed inset-0 z-[60] bg-black/60 transition-opacity duration-500 ${
           isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
         }`} 
-        onClick={() => setIsOpen(false)} 
+        onClick={closeDrawer}
       />
       
       {/* Drawer vindo da ESQUERDA */}
@@ -43,7 +51,7 @@ export default function WelcomeDrawer() {
       >
         {/* Botão de Fechar */}
         <button 
-          onClick={() => setIsOpen(false)}
+          onClick={closeDrawer}
           className="absolute top-4 right-4 p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-full transition-colors z-10"
         >
           <X size={28} />
@@ -69,7 +77,7 @@ export default function WelcomeDrawer() {
           </p>
           
           <button 
-            onClick={() => setIsOpen(false)}
+            onClick={closeDrawer}
             className="w-full max-w-sm h-14 bg-red-600 text-white font-bold text-lg rounded-xl hover:bg-red-700 hover:scale-[1.02] transition-all shadow-lg shadow-red-200"
           >
             Fazer meu pedido

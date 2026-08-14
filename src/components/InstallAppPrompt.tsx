@@ -30,15 +30,21 @@ export default function InstallAppPrompt() {
       sessionStorage.setItem(DISMISS_KEY, "true");
     };
 
+    const showAfterWelcome = () => window.setTimeout(() => setIsVisible(true), 350);
+
     setIsIos(/iPad|iPhone|iPod/.test(window.navigator.userAgent));
-    const timer = window.setTimeout(() => setIsVisible(true), 900);
     window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
     window.addEventListener("appinstalled", handleAppInstalled);
+    window.addEventListener("welcomeDrawerClosed", showAfterWelcome);
+
+    if (sessionStorage.getItem("welcomeDrawerClosed")) {
+      showAfterWelcome();
+    }
 
     return () => {
-      window.clearTimeout(timer);
       window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
       window.removeEventListener("appinstalled", handleAppInstalled);
+      window.removeEventListener("welcomeDrawerClosed", showAfterWelcome);
     };
   }, []);
 
