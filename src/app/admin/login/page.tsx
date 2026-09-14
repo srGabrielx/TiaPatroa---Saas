@@ -3,8 +3,10 @@
 import { signIn } from "next-auth/react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import GoogleButton from "@/components/GoogleButton";
 
 export default function AdminLoginPage() {
+
     const router = useRouter();
     // 🚨 CORREÇÃO: E-mail não está mais exposto para qualquer visitante
     const [email, setEmail] = useState("");
@@ -46,7 +48,19 @@ export default function AdminLoginPage() {
                     </div>
                 )}
 
+                <div className="mb-6">
+                    <GoogleButton variant="card" />
+                </div>
+
+                <div className="relative flex items-center justify-center my-6">
+                    <div className="border-t border-gray-200 w-full"></div>
+                    <span className="bg-white px-3 text-xs uppercase tracking-wider text-gray-400 font-semibold absolute">
+                        Ou com senha
+                    </span>
+                </div>
+
                 <form onSubmit={handleLogin} className="space-y-5">
+
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">E-mail</label>
                         <input

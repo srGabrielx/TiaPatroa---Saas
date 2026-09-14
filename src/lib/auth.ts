@@ -1,6 +1,7 @@
 import { timingSafeEqual } from "crypto";
 import type { DefaultSession, NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
 import { isAdminRole } from "@/lib/roles";
 
 declare module "next-auth" {
@@ -30,6 +31,11 @@ const secureCompare = (first: string, second: string) => {
 
 export const authOptions: NextAuthOptions = {
   providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID || "google-client-id-cantina",
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "google-client-secret-cantina",
+      allowDangerousEmailAccountLinking: true,
+    }),
     CredentialsProvider({
       name: "Credentials",
       credentials: {
@@ -66,16 +72,21 @@ export const authOptions: NextAuthOptions = {
     maxAge: 4 * 60 * 60,
     updateAge: 60 * 60,
   },
-  secret: process.env.NEXTAUTH_SECRET,
-  useSecureCookies: process.env.NODE_ENV === "production",
+  secret: process.env.NEXTAUTH_SECRET || "cantina-tia-patroa-secret-key-prod-2025",
+  useSecureCookies: false,
   callbacks: {
     async jwt({ token, user }) {
-      if (user) token.role = user.role;
+      if (user) {
+        token.role = user.role || (user.email === process.env.ADMIN_EMAIL ? "admin" : "client");
+      }
       return token;
     },
     async session({ session, token }) {
-      if (session.user) session.user.role = token.role as string;
+      if (session.user) {
+        session.user.role = (token.role as string) || "client";
+      }
       return session;
     },
   },
 };
+

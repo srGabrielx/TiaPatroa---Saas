@@ -6,6 +6,7 @@ import Providers from "@/components/Providers";
 import Footer from "@/components/Footer";
 import WelcomeDrawer from "@/components/WelcomeDrawer";
 import InstallAppPrompt from "@/components/InstallAppPrompt";
+import GoogleButton from "@/components/GoogleButton";
 import Image from "next/image";
 
 // Importando o ícone ShoppingCart atualizado
@@ -41,18 +42,21 @@ export default function ClientLayout({ children }: { children: ReactNode }) {
                         </Link>
 
                         {/* Navegação e Ações */}
-                        <div className="flex items-center gap-1 sm:gap-4">
-                            <Link href="/pedidos" className="p-2 sm:px-4 sm:py-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-full sm:rounded-lg transition flex items-center gap-2">
+                        <div className="flex items-center gap-1.5 sm:gap-3">
+                            <GoogleButton variant="header" />
+
+                            <Link href="/pedidos" className="p-2 sm:px-3.5 sm:py-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-full sm:rounded-lg transition flex items-center gap-2">
                                 <ShoppingBag className="w-5 h-5" />
                                 <span className="hidden sm:block text-sm font-semibold">Pedidos</span>
                             </Link>
 
-                            <div className="w-px h-6 bg-gray-200 mx-1 sm:mx-2"></div>
+                            <div className="w-px h-6 bg-gray-200 mx-0.5 sm:mx-1"></div>
 
                             <CarrinhoDrawer />
                         </div>
                     </div>
                 </header>
+
 
                 {/* Conteúdo Principal */}
                 <main className="flex-1 w-full pb-20 sm:pb-8">
